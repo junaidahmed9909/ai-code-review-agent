@@ -1,0 +1,37 @@
+name: AI Code Review
+
+# Reviews every pull request in this repo with the agent itself, no server needed.
+# Add an ANTHROPIC_API_KEY repository secret to turn on the AI pass; without it, the rule checks run alone.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    if: github.actor != 'dependabot[bot]' && github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main   # always run the reviewer from main, never from the PR's own code
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Build the reviewer
+        run: |
+          mvn -B -q compile
+          mvn -B -q dependency:build-classpath -Dmdep.outputFile=cp.txt -Dmdep.includeScope=runtime
+      - name: Review the pull request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: java -cp "target/classes:$(cat cp.txt)" com.junaid.review.ReviewCli | tee -a "$GITHUB_STEP_SUMMARY"

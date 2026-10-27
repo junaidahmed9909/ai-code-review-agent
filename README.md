@@ -90,6 +90,10 @@ mvn spring-boot:run
 
 5. Open a pull request. GitHub's webhook page shows the delivery and the agent's `202` reply; the review appears on the PR a few seconds later.
 
+## Running it as a GitHub Action (no server)
+
+`.github/workflows/review.yml` runs the same engine on every pull request in this repo using `ReviewCli`, with the built-in `GITHUB_TOKEN`. No hosting or webhook needed. Copy that workflow into any Java repo to use it there, and add an `ANTHROPIC_API_KEY` repository secret to turn on the AI pass.
+
 ## Configuration
 
 | Property | Env var | Default |
