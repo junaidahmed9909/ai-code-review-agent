@@ -1,5 +1,7 @@
 # AI Code Review Agent
 
+[![CI](https://github.com/junaidahmed9909/ai-code-review-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/junaidahmed9909/ai-code-review-agent/actions/workflows/ci.yml)
+
 Code review is where teams catch bugs, but a lot of reviewer time goes to the same handful of issues: an empty catch block, a string compared with `==`, a password someone forgot to pull out. By the time a human gets to the interesting parts, they're tired.
 
 This agent takes the first pass. When a pull request opens, GitHub calls a webhook, the agent reads the diff, runs fast rule checks, asks an LLM to look for deeper problems, and posts inline comments right on the lines that need attention. Every AI comment is checked against the diff before it's posted, so the model can't comment on lines that don't exist.
