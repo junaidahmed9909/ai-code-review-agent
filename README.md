@@ -111,14 +111,16 @@ mvn spring-boot:run
 
 `GET /api/stats` reports reviews run, files reviewed, comments posted, findings per rule, AI comments rejected as off-diff, and average review time. Each comment invites a 👍 or 👎 reaction; counting those (GitHub's reactions API, or just by hand at first) gives an acceptance rate per rule. Rules that keep getting 👎 should be tuned or removed.
 
-Fill this in once real PRs have gone through it:
+### Measured results
+
+[Pull request #4](https://github.com/junaidahmed9909/ai-code-review-agent/pull/4) adds a demo file with planted problems. The [AI Code Review workflow](.github/workflows/review.yml) reviewed it automatically ([run](https://github.com/junaidahmed9909/ai-code-review-agent/actions/runs/40591917660), Oct 27 2026, rules only).
 
 | Measurement | Result |
 |---|---|
-| Repos / PRs reviewed | _fill in_ |
-| Comments posted | _fill in_ |
-| Helpful rate (👍 / reacted) | _fill in_ |
-| Median review time | _fill in_ |
+| Planted issues flagged | 11 of 11, each on the correct line |
+| False positives | 0 on the demo PR, and 0 across the false-positive test cases |
+| Review time (parse, rules, compose) | 6 ms for the file; the job's time is mostly the Maven build |
+| Helpful rate (👍 / reacted) | Not measured yet. Needs real pull requests from other developers |
 
 ## Testing
 

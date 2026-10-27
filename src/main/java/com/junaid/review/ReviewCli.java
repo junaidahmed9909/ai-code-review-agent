@@ -48,7 +48,7 @@ public final class ReviewCli {
         }
         ReviewEngine.ReviewResult result = engine.review(diff);
         github.postReview(repo[0], repo[1], number, headSha, result.summaryMarkdown(), result.comments());
-        System.out.printf("Reviewed %d files in %d ms: %d comments posted (AI pass %s).%n",
+        System.out.printf("Reviewed %d file(s) in %d ms: %d comments posted (AI pass %s).%n",
                 result.filesReviewed(), result.durationMs(), result.comments().size(), result.aiUsed() ? "on" : "off");
         result.warnings().forEach(w -> System.out.println("Warning: " + w));
     }
