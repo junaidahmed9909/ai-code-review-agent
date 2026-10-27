@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v5
         with:
           ref: main   # always run the reviewer from main, never from the PR's own code
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '21'
