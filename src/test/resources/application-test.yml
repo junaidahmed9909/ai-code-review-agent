@@ -1,0 +1,7 @@
+llm:
+  api-key: ""
+github:
+  token: ""
+  webhook-secret: test-secret
+  api-url: https://github.example.test
+  post-reviews: false

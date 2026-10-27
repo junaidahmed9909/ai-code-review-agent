@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: ai-code-review-agent
+
+server:
+  # Diffs can be large
+  tomcat:
+    max-swallow-size: 5MB
+
+llm:
+  api-key: ${ANTHROPIC_API_KEY:}
+  model: ${LLM_MODEL:claude-sonnet-5-5}
+  base-url: ${LLM_BASE_URL:https://api.anthropic.com}
+  max-tokens: 2048
+  timeout: PT90S
+
+github:
+  token: ${GITHUB_TOKEN:}
+  webhook-secret: ${GITHUB_WEBHOOK_SECRET:}
+  api-url: ${GITHUB_API_URL:https://api.github.com}
+  post-reviews: ${REVIEW_POST_TO_GITHUB:true}
+
+review:
+  max-comments: 20
+  max-ai-files: 8
+  max-ai-chars-per-file: 12000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

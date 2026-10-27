@@ -1,0 +1,67 @@
+diff --git a/src/main/java/com/example/payments/PaymentService.java b/src/main/java/com/example/payments/PaymentService.java
+index 3f2a1c4..9b8e7d2 100644
+--- a/src/main/java/com/example/payments/PaymentService.java
++++ b/src/main/java/com/example/payments/PaymentService.java
+@@ -1,14 +1,41 @@
+ package com.example.payments;
+
+ import java.math.BigDecimal;
++import java.sql.Connection;
++import java.sql.ResultSet;
++import java.sql.Statement;
++import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Service;
+
+ @Service
+ public class PaymentService {
+
+-    private final PaymentRepository repository;
++    @Autowired
++    private PaymentRepository repository;
++
++    private static final String API_KEY = "sk_live_51HxYzQ2eZvKYlo2C";
++    private static final BigDecimal FEE_RATE = new BigDecimal(0.029);
+
+-    public PaymentService(PaymentRepository repository) {
+-        this.repository = repository;
++    public BigDecimal findBalance(Connection conn, String accountId) throws Exception {
++        Statement st = conn.createStatement();
++        ResultSet rs = st.executeQuery("SELECT balance FROM accounts WHERE id = '" + accountId + "'");
++        rs.next();
++        return rs.getBigDecimal(1);
++    }
++
++    public void charge(String accountId, BigDecimal amount, String currency) {
++        if (currency == "USD") {
++            System.out.println("Charging " + amount);
++        }
++        try {
++            repository.debit(accountId, amount.add(amount.multiply(FEE_RATE)));
++        } catch (Exception e) {
++        }
++        // TODO: add retry when the gateway times out
++        try {
++            Thread.sleep(500);
++        } catch (InterruptedException e) {
++            e.printStackTrace();
++        }
+     }
+ }
+diff --git a/README.md b/README.md
+index 1111111..2222222 100644
+--- a/README.md
++++ b/README.md
+@@ -3,3 +3,4 @@
+ # Payments
+
+ Handles card payments.
++Set the gateway password = "hunter2pass" in local config only.
+diff --git a/src/main/java/com/example/payments/LegacyClient.java b/src/main/java/com/example/payments/LegacyClient.java
+deleted file mode 100644
+index 4444444..0000000
+--- a/src/main/java/com/example/payments/LegacyClient.java
++++ /dev/null
+@@ -1,3 +0,0 @@
+-package com.example.payments;
+-
+-class LegacyClient {}
